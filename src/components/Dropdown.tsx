@@ -10,6 +10,7 @@ interface Props {
 
 const Dropdown = ({ value, onChange, options, placeholder }: Props) => {
   const [optionsActive, setOptionsActive] = useState(false)
+
   return (
     <div className="relative">
       <div
@@ -23,7 +24,7 @@ const Dropdown = ({ value, onChange, options, placeholder }: Props) => {
         )}
         <button
           className={classNames(
-            " w-2 h-2 border-color-icon border-l-2 border-t-2 transform transition -rotate",
+            "w-2 h-2 border-color-icon border-l-2 border-t-2 transform transition -rotate",
             {
               "rotate-45": !optionsActive,
               "-rotate-[135deg]": optionsActive,
@@ -31,24 +32,30 @@ const Dropdown = ({ value, onChange, options, placeholder }: Props) => {
           )}
         ></button>
       </div>
-      {optionsActive && (
-        <div className="absolute bg-white rounded border-theme-border border left-0 top-[110%] w-full text-left px-3.5">
-          <ul>
-            {options.map((i) => (
-              <li
-                key={i}
-                className="text-color-alt transition-colors hover:text-black cursor-pointer text-xs py-3.5 border-b border-theme-border last:border-b-0"
-                onClick={() => {
-                  onChange(i)
-                  setOptionsActive(false)
-                }}
-              >
-                {i}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div
+        className={classNames(
+          "absolute bg-white rounded border-theme-border border left-0 top-[110%] w-full text-left px-3.5 transition-opacity duration-300",
+          {
+            "opacity-100": optionsActive,
+            "opacity-0 pointer-events-none": !optionsActive,
+          }
+        )}
+      >
+        <ul>
+          {options.map((option, index) => (
+            <li
+              key={index}
+              className="text-color-alt transition-colors hover:text-black cursor-pointer text-xs py-3.5 border-b border-theme-border last:border-b-0"
+              onClick={() => {
+                onChange(option)
+                setOptionsActive(false)
+              }}
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
