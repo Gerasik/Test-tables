@@ -1,15 +1,8 @@
 import { Subject } from "rxjs"
-
-export interface IData {
-  id: number
-  name: string
-  surname: string
-  age: number
-  city: string
-}
+import { DataItem } from "schema/data"
 
 export interface tablesStoreData {
-  data: IData[][]
+  data: DataItem[][]
 }
 
 const subject = new Subject<tablesStoreData>()
@@ -37,14 +30,14 @@ const tablesStore = {
     }
     subject.next(state)
   },
-  addRow: (newRowData: IData) => {
+  addRow: (newRowData: DataItem) => {
     state = {
       ...state,
       data: [[...state.data[0], newRowData], ...state.data.slice(1)],
     }
     subject.next(state)
   },
-  deleteRow: (arrayIndex: number, rowId: number) => {
+  deleteRow: (arrayIndex: number, rowId: string) => {
     const newData = [...state.data]
     newData[arrayIndex] = newData[arrayIndex].filter(
       (item) => item.id !== rowId

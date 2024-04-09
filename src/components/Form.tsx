@@ -1,45 +1,101 @@
-import { useRef } from "react"
-import tablesStore, { IData } from "store/data"
+import InputText from "./InputText"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { DataItem, dataItemSchema } from "schema/data"
+import FieldContainer from "./FieldContainer"
+import Dropdown from "./Dropdown"
+import tablesStore from "store/data"
+import Button from "./Button"
+import { v4 as uuidv4 } from "uuid"
+
+const cityOptions = ["Riga", "Daugavpils", "Jūrmala", "Ventspils"]
 
 const Form = () => {
-  const refName = useRef<HTMLInputElement>(null)
-  const refSurname = useRef<HTMLInputElement>(null)
-  const refAge = useRef<HTMLInputElement>(null)
-  const refCity = useRef<HTMLInputElement>(null)
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<DataItem>({
+    mode: "onChange",
+    resolver: yupResolver(dataItemSchema),
+  })
 
-  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    if (
-      refName.current &&
-      refSurname.current &&
-      refAge.current &&
-      refCity.current
-    ) {
-      e.preventDefault()
-      const newRowData: IData = {
-        id: new Date().valueOf(),
-        name: refName.current.value,
-        surname: refSurname.current.value,
-        age: +refAge.current.value,
-        city: refCity.current.value,
-      }
-      tablesStore.addRow(newRowData)
-      refName.current.value = ""
-      refSurname.current.value = ""
-      refAge.current.value = ""
-      refCity.current.value = ""
-    }
+  const onSubmit: SubmitHandler<DataItem> = (data) => {
+    const dataWithUniqueId = { ...data, id: uuidv4() }
+    tablesStore.addRow(dataWithUniqueId)
+    reset()
   }
 
   return (
-    <div className="rounded bg-white shadow px-4 py-5 max-w-72">
-      <form className="flex flex-col" onSubmit={onFormSubmit}>
-        <input type="text" required ref={refName} />
-        <input type="text" required ref={refSurname} />
-        <input type="text" required ref={refAge} />
-        <input type="text" required ref={refCity} />
-        <button type="submit">create</button> <br />
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="rounded bg-white shadow px-4 py-5 max-w-72 flex flex-col gap-3.5"
+    >
+      <FieldContainer fieldError={errors.name?.message}>
+        <Controller
+          name="name"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <InputText
+              value={field.value || ""}
+              onChange={field.onChange}
+              placeholder="Name"
+            />
+          )}
+        />
+      </FieldContainer>
+      <FieldContainer fieldError={errors.surname?.message}>
+        <Controller
+          name="surname"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <InputText
+              value={field.value || ""}
+              onChange={field.onChange}
+              placeholder="Surname"
+            />
+          )}
+        />
+      </FieldContainer>
+      <FieldContainer fieldError={errors.age?.message}>
+        <Controller
+          name="age"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <InputText
+              value={field.value || ""}
+              onChange={field.onChange}
+              placeholder="Age"
+              type="number"
+              min={0}
+              max={100}
+            />
+          )}
+        />
+      </FieldContainer>
+      <FieldContainer fieldError={errors.city?.message}>
+        <Controller
+          name="city"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <Dropdown
+              value={field.value || ""}
+              onChange={field.onChange}
+              placeholder="City"
+              options={cityOptions}
+            />
+          )}
+        />
+      </FieldContainer>
+      <Button disabled={!isValid} type="submit">
+        Add
+      </Button>
+    </form>
   )
 }
 
