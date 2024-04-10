@@ -9,6 +9,8 @@ export default {
         "color-icon": "#6F7B8D",
         "theme-button-primary": "#1493FE",
         "theme-button-primary-disabled": "#C2CBD1",
+        "table-main": "#0A508B",
+        "table-border": "#EBEBEB",
       },
     },
   },

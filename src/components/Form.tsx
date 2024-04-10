@@ -18,13 +18,16 @@ const Form = () => {
     formState: { errors, isValid },
   } = useForm<DataItem>({
     mode: "onChange",
+    defaultValues: {
+      id: uuidv4(),
+    },
     resolver: yupResolver(dataItemSchema),
   })
+  console.log("🚀 ~ Form ~ errors:", errors, isValid)
 
   const onSubmit: SubmitHandler<DataItem> = (data) => {
-    const dataWithUniqueId = { ...data, id: uuidv4() }
-    tablesStore.addRow(dataWithUniqueId)
-    reset()
+    tablesStore.addRow(data)
+    reset({ id: uuidv4() })
   }
 
   return (

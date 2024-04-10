@@ -7,3 +7,25 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: #e5e8ed;
 }
+
+@layer components {
+  .table-list {
+    @apply text-sm;
+    background-color: white;
+    text-align: left;
+  }
+  .table-list th {
+    background-color: theme("colors.table-main");
+    color: white;
+    @apply font-normal;
+    @apply px-3;
+    @apply pt-2.5;
+    @apply pb-1.5;
+  }
+  .table-list td {
+    @apply border;
+    @apply border-table-border;
+    @apply px-3;
+    @apply py-2.5;
+  }
+}

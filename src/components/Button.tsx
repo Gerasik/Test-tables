@@ -3,11 +3,17 @@ import classNames from "classnames"
 
 interface Props {
   children: ReactNode
-  disabled: boolean
+  disabled?: boolean
   type?: HTMLButtonElement["type"]
+  onClick: () => void
 }
 
-const Button = ({ children, disabled, type = "button" }: Props) => {
+const Button = ({
+  children,
+  disabled = false,
+  type = "button",
+  onClick,
+}: Props) => {
   return (
     <button
       type={type}
@@ -20,6 +26,7 @@ const Button = ({ children, disabled, type = "button" }: Props) => {
             disabled,
         }
       )}
+      onClick={onClick}
     >
       {children}
     </button>
