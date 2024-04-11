@@ -1,8 +1,10 @@
-import { useState, useLayoutEffect, Fragment } from "react"
+import { useState, useLayoutEffect } from "react"
 import tablesStore from "store/data"
 import Table from "./Table"
 import { DataItem } from "schema/data"
 import Button from "./Button"
+import CloseIcon from "assets/close.svg?react"
+import { ButtonSize, ButtonStyle } from "types/Button"
 
 const TableList = () => {
   const [tablesState, setTablesState] = useState(tablesStore.initialState)
@@ -12,12 +14,24 @@ const TableList = () => {
   }, [])
 
   return (
-    <div>
+    <div className="flex gap-9 flex-col">
       {tablesState.data.map((tableData, tableIndex) => (
-        <Fragment key={tableIndex}>
-          {!tableIndex && (
-            <Button onClick={tablesStore.copyTable}> Copy table</Button>
-          )}
+        <div key={tableIndex} className="flex gap-3 flex-col">
+          <div className="self-end flex gap-5 align-middle">
+            {!tableIndex && (
+              <Button onClick={tablesStore.copyTable} size={ButtonSize.SMALL}>
+                Copy table
+              </Button>
+            )}
+            <Button
+              className="fill-theme-red ease-in-out transition-transform hover:rotate-90 hover:scale-125 active:scale-75"
+              style={ButtonStyle.EMPTY}
+              onClick={() => tablesStore.deleteTable(tableIndex)}
+              disabled={!tableIndex}
+            >
+              <CloseIcon />
+            </Button>
+          </div>
           <Table
             data={tableData}
             onEdit={(item: DataItem) => console.log(item)}
@@ -25,7 +39,7 @@ const TableList = () => {
               tablesStore.deleteRow(tableIndex, itemId)
             }
           />
-        </Fragment>
+        </div>
       ))}
     </div>
   )

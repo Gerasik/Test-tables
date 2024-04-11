@@ -24,8 +24,11 @@
     "paths": {
       "components/*": ["components/*"],
       "store/*": ["store/*"],
-      "schema/*": ["schema/*"]
-    }
+      "schema/*": ["schema/*"],
+      "types/*": ["types/*"],
+      "assets/*": ["assets/*"]
+    },
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
