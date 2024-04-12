@@ -1,85 +1,73 @@
 import { Subject } from "rxjs"
 import { DataItem } from "schema/data"
 
-export interface tablesStoreData {
+export interface TablesStoreData {
   data: DataItem[][]
   editableRecord: { arrayIndex: number; rowId: string } | null
 }
 
-const subject = new Subject<tablesStoreData>()
+const STORAGE_KEY = "tablesStoreState"
 
-const initialState: tablesStoreData = {
-  data: [[]],
-  editableRecord: null,
+const subject = new Subject<TablesStoreData>()
+
+let initialState: TablesStoreData
+const storedState = localStorage.getItem(STORAGE_KEY)
+if (storedState) {
+  initialState = JSON.parse(storedState)
+} else {
+  initialState = {
+    data: [[]],
+    editableRecord: null,
+  }
 }
 
 let state = initialState
 
 const tablesStore = {
-  subscribe: (setState: (state: tablesStoreData) => void) =>
+  subscribe: (setState: (state: TablesStoreData) => void) =>
     subject.subscribe(setState),
   copyTable: () => {
-    state = {
-      ...state,
-      data: [...state.data, state.data[0]],
-    }
-    subject.next(state)
+    const newData = [...state.data, state.data[0]]
+    updateState({ data: newData })
   },
   deleteTable: (tableId: number) => {
-    state = {
-      ...state,
-      data: state.data.filter((_i, index) => index !== tableId),
-    }
-    subject.next(state)
+    const newData = state.data.filter((_i, index) => index !== tableId)
+    updateState({ data: newData })
   },
   addRow: (newRowData: DataItem) => {
-    state = {
-      ...state,
-      data: [[...state.data[0], newRowData], ...state.data.slice(1)],
-    }
-    subject.next(state)
+    const newData = [[...state.data[0], newRowData], ...state.data.slice(1)]
+    updateState({ data: newData })
   },
   deleteRow: (arrayIndex: number, rowId: string) => {
-    const newData = [...state.data]
-    newData[arrayIndex] = newData[arrayIndex].filter(
-      (item) => item.id !== rowId
+    const newData = state.data.map((table, index) =>
+      index === arrayIndex ? table.filter((item) => item.id !== rowId) : table
     )
-    state = {
-      ...state,
-      data: newData,
-    }
-    subject.next(state)
+    updateState({ data: newData })
   },
   editRow: (newItem: DataItem) => {
     if (state.editableRecord) {
       const { arrayIndex, rowId } = state.editableRecord
-      const newData = [...state.data]
-      newData[arrayIndex] = newData[arrayIndex].map((item) =>
-        item.id === rowId ? newItem : item
+      const newData = state.data.map((table, index) =>
+        index === arrayIndex
+          ? table.map((item) => (item.id === rowId ? newItem : item))
+          : table
       )
-      state = {
-        ...state,
-        data: newData,
-        editableRecord: null,
-      }
-      subject.next(state)
+      updateState({ data: newData, editableRecord: null })
     }
   },
   setEditableRecord: (arrayIndex: number, rowId: string) => {
-    state = {
-      ...state,
-      editableRecord: { arrayIndex, rowId },
-    }
-    subject.next(state)
+    updateState({ editableRecord: { arrayIndex, rowId } })
   },
   clearEditableRecord: () => {
-    state = {
-      ...state,
-      editableRecord: null,
-    }
-    subject.next(state)
+    updateState({ editableRecord: null })
   },
   initialState,
+}
+
+function updateState(newState: Partial<TablesStoreData>) {
+  state = { ...state, ...newState }
+  subject.next(state)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
 
 export default tablesStore
