@@ -13,7 +13,7 @@ const TableList = () => {
   }, [])
 
   return (
-    <div className="flex gap-9 flex-col mt-12 overflow-x-auto">
+    <div className="flex gap-9 flex-col mt-12 overflow-x-auto tablet:overflow-x-hidden">
       {tablesState.data.map((tableData, tableIndex) => (
         <div key={tableIndex} className="flex gap-3 flex-col">
           <div className="self-end flex gap-5 items-center">
@@ -23,7 +23,7 @@ const TableList = () => {
               </Button>
             )}
             <Button
-              className="fill-theme-red ease-in-out transition-transform hover:rotate-90 hover:scale-125 active:scale-75 disabled:fill-theme-button-primary-disabled"
+              className="fill-theme-red ease-in-out transition-transform  hover:scale-125 active:scale-75 disabled:fill-theme-button-primary-disabled"
               style={ButtonStyle.EMPTY}
               onClick={() => tablesStore.deleteTable(tableIndex)}
               disabled={!tableIndex}
