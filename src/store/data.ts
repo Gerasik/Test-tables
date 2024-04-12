@@ -3,12 +3,14 @@ import { DataItem } from "schema/data"
 
 export interface tablesStoreData {
   data: DataItem[][]
+  editableRecord: { arrayIndex: number; rowId: string } | null
 }
 
 const subject = new Subject<tablesStoreData>()
 
 const initialState: tablesStoreData = {
   data: [[]],
+  editableRecord: null,
 }
 
 let state = initialState
@@ -45,6 +47,35 @@ const tablesStore = {
     state = {
       ...state,
       data: newData,
+    }
+    subject.next(state)
+  },
+  editRow: (newItem: DataItem) => {
+    if (state.editableRecord) {
+      const { arrayIndex, rowId } = state.editableRecord
+      const newData = [...state.data]
+      newData[arrayIndex] = newData[arrayIndex].map((item) =>
+        item.id === rowId ? newItem : item
+      )
+      state = {
+        ...state,
+        data: newData,
+        editableRecord: null,
+      }
+      subject.next(state)
+    }
+  },
+  setEditableRecord: (arrayIndex: number, rowId: string) => {
+    state = {
+      ...state,
+      editableRecord: { arrayIndex, rowId },
+    }
+    subject.next(state)
+  },
+  clearEditableRecord: () => {
+    state = {
+      ...state,
+      editableRecord: null,
     }
     subject.next(state)
   },

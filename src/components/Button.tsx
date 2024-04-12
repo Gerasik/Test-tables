@@ -29,13 +29,14 @@ const Button = ({
           style === ButtonStyle.PRIMARY,
         "bg-theme-button-primary cursor-pointer hover:bg-theme-button-primary/70 active:bg-theme-button-primary/50":
           style === ButtonStyle.PRIMARY && !disabled,
-        "bg-theme-button-primary-disabled fill-theme-button-primary-disabled cursor-default pointer-events-none":
+        "bg-theme-button-primary-disabled":
           style === ButtonStyle.PRIMARY && disabled,
-        "px-0 py-0 bg-inherit hover:bg-transparent active:bg-transparent":
+        "cursor-default pointer-events-none": disabled,
+        "py-3.5": style === ButtonStyle.PRIMARY && size === ButtonSize.REGULAR,
+        "py-1.5": style === ButtonStyle.PRIMARY && size === ButtonSize.SMALL,
+        "bg-inherit hover:bg-transparent active:bg-transparent":
           style === ButtonStyle.EMPTY || style === ButtonStyle.UNDERLINE,
         underline: style === ButtonStyle.UNDERLINE,
-        "py-3.5": size === ButtonSize.REGULAR,
-        "py-1.5": size === ButtonSize.SMALL,
       })}
       onClick={onClick}
       disabled={disabled}

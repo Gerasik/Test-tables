@@ -4,7 +4,7 @@ import { ButtonStyle } from "types/Button"
 
 interface Props {
   data: DataItem[]
-  onEdit: (item: DataItem) => void
+  onEdit: (id: string) => void
   onDelete: (id: string) => void
 }
 
@@ -28,31 +28,33 @@ const Table: React.FC<Props> = ({ data, onEdit, onDelete }) => {
               <td>{item.surname}</td>
               <td>{item.age}</td>
               <td>{item.city}</td>
-              <td className="flex justify-around">
-                <Button
-                  style={ButtonStyle.UNDERLINE}
-                  className=" text-table-button-primary"
-                  onClick={() => onEdit(item)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  style={ButtonStyle.UNDERLINE}
-                  className="text-table-button-dangerous"
-                  onClick={() => onDelete(item.id)}
-                >
-                  Delete
-                </Button>
+              <td>
+                <div className="flex justify-around h-100%">
+                  <Button
+                    style={ButtonStyle.UNDERLINE}
+                    className="text-table-button-primary"
+                    onClick={() => onEdit(item.id)}
+                    key={`edit-${item.id}`}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    style={ButtonStyle.UNDERLINE}
+                    className="text-table-button-dangerous"
+                    onClick={() => onDelete(item.id)}
+                    key={`delete-${item.id}`}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>⠀</td>
+            <td colSpan={5} className="text-center">
+              No data available
+            </td>
           </tr>
         )}
       </tbody>

@@ -7,10 +7,17 @@ import Dropdown from "./Dropdown"
 import tablesStore from "store/data"
 import Button from "./Button"
 import { v4 as uuidv4 } from "uuid"
+import { ButtonType } from "types/Button"
+import { useEffect } from "react"
+
+interface Props {
+  dataToEdit?: DataItem
+  onEdit?: (item: DataItem) => void
+}
 
 const cityOptions = ["Riga", "Daugavpils", "Jūrmala", "Ventspils"]
 
-const Form = () => {
+const Form = ({ dataToEdit, onEdit }: Props) => {
   const {
     handleSubmit,
     control,
@@ -18,15 +25,24 @@ const Form = () => {
     formState: { errors, isValid },
   } = useForm<DataItem>({
     mode: "onChange",
-    defaultValues: {
+    defaultValues: dataToEdit || {
       id: uuidv4(),
     },
     resolver: yupResolver(dataItemSchema),
   })
-  console.log("🚀 ~ Form ~ errors:", errors, isValid)
+
+  useEffect(() => {
+    if (dataToEdit) {
+      reset(dataToEdit)
+    }
+  }, [dataToEdit, reset])
 
   const onSubmit: SubmitHandler<DataItem> = (data) => {
-    tablesStore.addRow(data)
+    if (onEdit) {
+      onEdit(data)
+    } else {
+      tablesStore.addRow(data)
+    }
     reset({ id: uuidv4() })
   }
 
@@ -95,8 +111,8 @@ const Form = () => {
           )}
         />
       </FieldContainer>
-      <Button disabled={!isValid} type="submit">
-        Add
+      <Button disabled={!isValid} type={ButtonType.SUBMIT}>
+        {onEdit ? "Edit" : "Add"}
       </Button>
     </form>
   )
