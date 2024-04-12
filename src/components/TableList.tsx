@@ -13,7 +13,7 @@ const TableList = () => {
   }, [])
 
   return (
-    <div className="flex gap-9 flex-col">
+    <div className="flex gap-9 flex-col mt-12 overflow-x-auto">
       {tablesState.data.map((tableData, tableIndex) => (
         <div key={tableIndex} className="flex gap-3 flex-col">
           <div className="self-end flex gap-5 items-center">

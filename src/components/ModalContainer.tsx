@@ -22,7 +22,7 @@ const ModalContainer = ({ children, onCloseModal, active, label }: Props) => {
         }
       )}
     >
-      <div className="bg-white h-auto flex flex-col">
+      <div className="bg-white h-auto flex flex-col items-stretch w-3/5 max-w-64 tablet:max-w-64">
         <div className="flex items-center justify-between px-4 mt-4">
           <span>{label}</span>
           <Button
@@ -34,7 +34,7 @@ const ModalContainer = ({ children, onCloseModal, active, label }: Props) => {
           </Button>
         </div>
 
-        <div>{children}</div>
+        <div className="self-center w-full">{children}</div>
       </div>
     </div>
   )
