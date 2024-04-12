@@ -1,12 +1,12 @@
 import TableList from "components/TableList"
 import "./App.css"
-import Form from "components/Form"
 import EditFrom from "components/EditForm"
+import CreateForm from "components/CreateFrom"
 
 function App() {
   return (
     <div className="App">
-      <Form />
+      <CreateForm />
       <TableList />
       <EditFrom />
     </div>

@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { DataItem, dataItemSchema } from "schema/data"
 import FieldContainer from "./FieldContainer"
 import Dropdown from "./Dropdown"
-import tablesStore from "store/data"
 import Button from "./Button"
 import { v4 as uuidv4 } from "uuid"
 import { ButtonType } from "types/Button"
@@ -12,12 +11,13 @@ import { useEffect } from "react"
 
 interface Props {
   dataToEdit?: DataItem
-  onEdit?: (item: DataItem) => void
+  buttonTitle: string
+  onSubmitForm: (item: DataItem) => void
 }
 
 const cityOptions = ["Riga", "Daugavpils", "Jūrmala", "Ventspils"]
 
-const Form = ({ dataToEdit, onEdit }: Props) => {
+const Form = ({ dataToEdit, onSubmitForm, buttonTitle }: Props) => {
   const {
     handleSubmit,
     control,
@@ -38,11 +38,7 @@ const Form = ({ dataToEdit, onEdit }: Props) => {
   }, [dataToEdit, reset])
 
   const onSubmit: SubmitHandler<DataItem> = (data) => {
-    if (onEdit) {
-      onEdit(data)
-    } else {
-      tablesStore.addRow(data)
-    }
+    onSubmitForm(data)
     reset({ id: uuidv4() })
   }
 
@@ -112,7 +108,7 @@ const Form = ({ dataToEdit, onEdit }: Props) => {
         />
       </FieldContainer>
       <Button disabled={!isValid} type={ButtonType.SUBMIT}>
-        {onEdit ? "Edit" : "Add"}
+        {buttonTitle}
       </Button>
     </form>
   )

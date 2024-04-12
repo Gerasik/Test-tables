@@ -24,7 +24,8 @@ const EditFrom = () => {
               )
             : undefined
         }
-        onEdit={(item) => tablesStore.editRow(item)}
+        buttonTitle="Edit"
+        onSubmitForm={(item) => tablesStore.editRow(item)}
       />
     </ModalContainer>
   )
